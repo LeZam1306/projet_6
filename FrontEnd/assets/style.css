@@ -145,7 +145,8 @@ li:hover {
 	color: #1D6154;
 	border: 1px solid #1D6154;
 	padding: 0rem 1rem;
-	
+	cursor: pointer;
+	transition: all ease-in-out 200ms;
 }
 .filter__item.filter__item--selected{
 	color: white;
