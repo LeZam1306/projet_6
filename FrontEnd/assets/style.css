@@ -125,6 +125,32 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+/*ici il vas y avoir mon css des filtres*/
+.filter{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+	margin: 3em 0rem;
+}
+.filter__item{
+	display: flex;
+	align-items: center;
+	height: 37px;
+	border-radius: 60px;
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 16px;
+	color: #1D6154;
+	border: 1px solid #1D6154;
+	padding: 0rem 1rem;
+	
+}
+.filter__item.filter__item--selected{
+	color: white;
+	background-color: #1D6154;
+}
 .gallery {
 	width: 100%;
 	display: grid;
