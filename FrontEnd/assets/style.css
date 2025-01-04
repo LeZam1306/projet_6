@@ -52,6 +52,7 @@ body {
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
+	background-color: #fffef8;
 }
 header {
 	display: flex;
@@ -61,7 +62,10 @@ header {
 section {
 	margin: 50px 0
 }
-
+a{
+	text-decoration: none;
+	color: inherit;
+}
 h1{
 	display: flex;
 	flex-direction: column;
@@ -93,6 +97,11 @@ nav ul {
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
+	cursor: pointer;
+}
+nav li.selected{
+	color: black;
+	font-weight: 600;
 }
 
 li:hover {
@@ -164,34 +173,34 @@ li:hover {
 	width: 100%;
 
 }
-#contact {
+#contact, #login{
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
 #contact > * {
 	text-align: center;
 
 }
-#contact h2{
+#contact h2, #login h1{
 	margin-bottom: 20px;
 }
-#contact form {
+#contact form, #login form{
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input {
+#contact input, #login input{
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label {
+#contact label{
 	margin: 2em 0 1em 0;
 }
-#contact textarea {
+#contact textarea, #login textarea{
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
@@ -206,7 +215,31 @@ input[type="submit"]{
 	text-align: center;
 	border-radius: 60px ;
 }
-
+.login__title{
+	color: #1D6154;
+	font-size: 30px;
+	font-weight: 700;
+}
+#login{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+#login input.login__submit{
+	height: 36px;
+	font-size: 14px;
+}
+#login .login__form{
+	margin-top: 0px;
+	width: 35%;
+}
+#login label{
+	margin: 2em 0em 5px 0em;
+}
+.login__miss-password{
+	text-decoration: underline;
+}
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
