@@ -2,6 +2,40 @@ import { getWorks, getCategories, postLogin } from "./api.js";
 import { createElementFilter, dynamicDisplayGallery } from "./utils.js";
 
 export async function index(){
+
+    function modal(){
+        let switchOnOff = false;
+
+        
+    }
+
+    function displayForLogged(){
+        if (window.localStorage.getItem("token") && window.localStorage.getItem("token") != ""){
+            //edit mode header
+            const editModeHeader = document.createElement("div");
+            editModeHeader.classList.add("edit-mode__header");
+            editModeHeader.innerHTML = `
+                <i class="fa-solid fa-pen-to-square"></i>
+		        <p>Mode édition</p>
+            `;
+            document.querySelector("header").before(editModeHeader); 
+
+            //btn edit new to title "projet"
+            const btnEdit = document.createElement("span");
+            btnEdit.classList.add("btn-edit");
+            btnEdit.innerHTML = `
+                <i class="fa-regular fa-pen-to-square"></i>
+		        Modifier
+            `;
+            document.querySelector("#portfolio h2").appendChild(btnEdit);
+            //Delet display of filters
+            document.querySelector(".filter").classList.add("display-none");
+        }
+    }
+    displayForLogged();
+    modal();
+
+
     //get element of api/word in array
     const dataWorks = await getWorks();
     const galleryElement = document.querySelector(".gallery");
