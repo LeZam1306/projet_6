@@ -230,6 +230,7 @@ input[type="submit"]{
 #login input.login__submit{
 	height: 36px;
 	font-size: 14px;
+	cursor: pointer;
 }
 #login .login__form{
 	margin-top: 0px;
@@ -256,5 +257,10 @@ footer nav ul {
 	border: 2px solid red;
 	border-radius: 4px;
 	background-color: rgb(255, 0, 0, 0.5);
+}
+.error-login{
+	color: red;
+	font-weight: 900;
+	text-align: center;
 }
 
