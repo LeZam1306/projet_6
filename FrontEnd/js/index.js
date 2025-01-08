@@ -4,9 +4,15 @@ import { createElementFilter, dynamicDisplayGallery } from "./utils.js";
 export async function index(){
 
     function modal(){
-        let switchOnOff = false;
+        const modal = document.querySelector(".modal");
+        const modalTrigger = document.querySelectorAll(".modal-trigger");
 
-        
+        //dynamic display of the display with buttons
+        modalTrigger.forEach(toggle => {
+            toggle.addEventListener("click", () =>{
+                modal.classList.toggle("active");
+            });
+        });
     }
 
     function displayForLogged(){
@@ -23,6 +29,7 @@ export async function index(){
             //btn edit new to title "projet"
             const btnEdit = document.createElement("span");
             btnEdit.classList.add("btn-edit");
+            btnEdit.classList.add("modal-trigger");
             btnEdit.innerHTML = `
                 <i class="fa-regular fa-pen-to-square"></i>
 		        Modifier
