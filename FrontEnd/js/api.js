@@ -44,3 +44,26 @@ export async function getWorks(){
 export async function getCategories(){
     return await getAny("http://localhost:5678/api/categories");
 }
+export async function removeWorks(id){
+    
+    try{
+        let token = JSON.parse(window.localStorage.getItem("token"));
+
+        let reponse = await fetch(`http://localhost:5678/api/works/${id}`,{
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (reponse.ok){
+                return true;
+        }else{
+            switch(reponse.status){
+                case 401:
+                    throw new Error("Action non authoriser");
+                default:
+                    throw new Error(`Comportement inattendu, code : ${reponse.status}`);
+            }
+        }
+    }catch(error){
+        console.log(error.message);
+    }
+}

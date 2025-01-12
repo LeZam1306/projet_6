@@ -1,21 +1,10 @@
-import { getWorks, getCategories, postLogin } from "./api.js";
+import { getWorks, getCategories, postLogin, removeWorks } from "./api.js";
 import { createElementFilter, dynamicDisplayGallery } from "./utils.js";
+import { modal } from "./modal.js";
 
 export async function index(){
 
-    function modal(){
-        const modal = document.querySelector(".modal");
-        const modalTrigger = document.querySelectorAll(".modal-trigger");
-
-        //dynamic display of the display with buttons
-        modalTrigger.forEach(toggle => {
-            toggle.addEventListener("click", () =>{
-                modal.classList.toggle("active");
-            });
-        });
-    }
-
-    function displayForLogged(){
+    async function displayForLogged(){
         if (window.localStorage.getItem("token") && window.localStorage.getItem("token") != ""){
             //edit mode header
             const editModeHeader = document.createElement("div");
@@ -37,11 +26,10 @@ export async function index(){
             document.querySelector("#portfolio h2").appendChild(btnEdit);
             //Delet display of filters
             document.querySelector(".filter").classList.add("display-none");
+
+            await modal();
         }
     }
-    displayForLogged();
-    modal();
-
 
     //get element of api/word in array
     const dataWorks = await getWorks();
@@ -81,4 +69,5 @@ export async function index(){
             dynamicDisplayGallery(dataWorksFilter,galleryElement);
         });
     }
+    displayForLogged();
 }
