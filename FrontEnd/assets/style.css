@@ -198,7 +198,7 @@ li:hover {
 	flex-direction: column;
 }
 
-#contact input, #login input{
+#contact input, #login input, .add-photo > input, select{
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
@@ -356,7 +356,6 @@ footer nav ul {
 	margin-right: auto;
 	text-align: center;
 	padding: 1.2rem 0 0.5rem 0rem;
-	overflow: scroll;
 	scrollbar-width: none;
 }
 .modal-body h2{
@@ -424,5 +423,93 @@ footer nav ul {
 .fa-xmark, .fa-arrow-left{
 	cursor: pointer;
 }
+.modal__add-Gallery{
+	height: 100%;
+}
+.add-photo{
+	display: flex;
+	flex-direction: column;
+	text-align: start;
+}
+input[type="file"]{
+	display: none;
+}
+.upload-photo{
+	background-color: #e8f1f6;
+	height: 169px;
+	border-radius: 3px;
+	margin-bottom: 2rem;
+}
+.photo-render{
+	display: none;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+.photo-render img{
+	height: 100%;
+	object-fit: cover;
+}
+.upload-photo .void{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+.void i{
+	font-size: 60px;
+	color: #CBD6DC;
+	margin: 30px 0 46px 0;
+}
+.void .void__btn-add{
+	display: block;
+	height: 36px;
+	background-color: #CBD6DC;
+	border-radius: 50px;
+	width: 50%;
+	max-width: 180px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 14px;
+	color: #306685;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	cursor: pointer;
+}
+.void .void__info{
+	font-size: 10px;
+	font-weight: 400;
+}
 
+.add-photo label[for="title"], .add-photo label[for="categorie"]{
+	margin-bottom: 0.5rem;
+}
+.add-photo #title{
+	margin-bottom: 1rem;
+}
+.add-photo #categorie{
+	border-radius: 0;
+	appearance: none;	
+	width: 100%;
+}
+.add-photo label[for="categorie"] + div{
+	position: relative;
+}
+.add-photo label[for="categorie"] + div::before{
+	position: absolute;
+	right: 2rem;
+	top: 50%;	
+	content: '\f078';
+	transform: translateY(-50%);
+	font-size: 12px;
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	color: #6C6C6C;
+}
+.add-photo > #title, #categorie{
+	padding: 0 1rem 0 1rem;
+	font-weight: 300;
+}
 

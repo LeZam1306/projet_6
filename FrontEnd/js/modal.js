@@ -1,4 +1,4 @@
-import { createElementClass, galleryDisplayModal} from "./utils.js";
+import { createElementClass, galleryDisplayModal, formModalDisplay} from "./utils.js";
 import { getWorks } from "./api.js";
 
 export async function modal(){
@@ -37,6 +37,14 @@ export async function modal(){
     const modal = templateModal();
     document.querySelector("body").appendChild(modal.template);
 
+    //dynamic display of the modal
+    const modalTrigger = document.querySelectorAll(".modal-trigger");
+    modalTrigger.forEach(toggle => {
+        toggle.addEventListener("click", () =>{
+            modal.template.classList.toggle("active");
+        })
+    });
+
     //get gallery images only
     let dataWorks = await getWorks();
     display();
@@ -54,6 +62,7 @@ export async function modal(){
                 });
                 modal.core.classList.value = "";
                 modal.core.classList.add("modal__gallery");
+                modal.body.style.overflow = "scroll";
                 galleryDisplayModal(dataWorks, modal.core);
                 break;
             case 1:
@@ -66,8 +75,36 @@ export async function modal(){
                 modal.btnNext.innerText = "Valider";
                 modal.core.classList.value = "";
                 modal.core.classList.add("modal__add-Gallery");
-                modal.core.innerHTML = "";
-                
+                modal.body.style.overflow = "visible";
+                modal.core.innerHTML = `
+                    <form class="add-photo" method="POST">
+                        <label class="upload-photo" for="upload">
+                            <div class="void">
+                                <i class="fa-regular fa-image fa-2xl"></i>
+                                <p class="void__btn-add">+ Ajouter photo</p>
+                                <p class="void__info">jpg, png : 4mo max</p>
+                            </div>
+                            <div class="photo-render">
+                                <img src="./assets/images/villa-ferneze.png">
+                            </div>
+                        </label>
+                        <input type="file" id="upload" name="upload">
+
+                        <label for="title">Titre</label>
+                        <input type="text" id="title" name="title">
+
+                        <label for="categorie">Catégorie</label>
+                        <div>
+                            <select id="categorie" name="categorie" value="">
+                                <option value="">Option</option>
+                                <option value="">Option</option>
+                                <option value="">Option</option>
+                                <option value="">Option</option>
+                            </select>
+                        </div>
+                    </form>
+                `;
+                formModalDisplay();
                 break;
             default:
                 steps = 0;

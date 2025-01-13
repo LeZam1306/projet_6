@@ -63,3 +63,9 @@ function removeWorksOfDisplay(id,data,parent){
     dynamicDisplayGallery(data,document.querySelector(".gallery"));
     galleryDisplayModal(data,parent);
 }
+
+export function formModalDisplay(){
+    const form = createElementClass("form", ["upload-photo"]);
+    form.setAttribute("for", "upload");
+    
+}
