@@ -76,35 +76,7 @@ export async function modal(){
                 modal.core.classList.value = "";
                 modal.core.classList.add("modal__add-Gallery");
                 modal.body.style.overflow = "visible";
-                modal.core.innerHTML = `
-                    <form class="add-photo" method="POST">
-                        <label class="upload-photo" for="upload">
-                            <div class="void">
-                                <i class="fa-regular fa-image fa-2xl"></i>
-                                <p class="void__btn-add">+ Ajouter photo</p>
-                                <p class="void__info">jpg, png : 4mo max</p>
-                            </div>
-                            <div class="photo-render">
-                                <img src="./assets/images/villa-ferneze.png">
-                            </div>
-                        </label>
-                        <input type="file" id="upload" name="upload">
-
-                        <label for="title">Titre</label>
-                        <input type="text" id="title" name="title">
-
-                        <label for="categorie">Catégorie</label>
-                        <div>
-                            <select id="categorie" name="categorie" value="">
-                                <option value="">Option</option>
-                                <option value="">Option</option>
-                                <option value="">Option</option>
-                                <option value="">Option</option>
-                            </select>
-                        </div>
-                    </form>
-                `;
-                formModalDisplay();
+                formModalDisplay(modal.core);
                 break;
             default:
                 steps = 0;
