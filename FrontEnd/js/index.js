@@ -14,6 +14,13 @@ export async function index(){
 		        <p>Mode édition</p>
             `;
             document.querySelector("header").before(editModeHeader); 
+            let btnLogin = document.querySelector(".login");
+            btnLogin.href = "#";
+            btnLogin.innerText = "logout";
+            btnLogin.addEventListener("click", () => {
+                window.localStorage.removeItem("token");
+                window.location.reload();
+            });
 
             //btn edit new to title "projet"
             const btnEdit = document.createElement("span");
@@ -28,6 +35,10 @@ export async function index(){
             document.querySelector(".filter").classList.add("display-none");
 
             await modal();
+        }else{
+            let btnLogin = document.querySelector(".login");
+            btnLogin.href = "login.html";
+            btnLogin.innerText = "login";
         }
     }
 
