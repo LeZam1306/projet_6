@@ -1,4 +1,4 @@
-import { removeWorks, getCategories, postWorks } from "./api.js";
+import { removeWorks, getCategories, postWorks, getWorks } from "./api.js";
 //Function for create a template element of the galery
 function createElementGallery(imageSrc,title,id){
     return `
@@ -34,7 +34,7 @@ export function createElementClass(element,classNames){
     return elementWithClass;
 }
 
-export async function galleryDisplayModal(data,parent){
+export function galleryDisplayModal(data,parent){
     parent.innerHTML = "";
     for (let i = 0; i < data.length; i++){
         const element = document.createElement("div");
@@ -52,6 +52,8 @@ export async function galleryDisplayModal(data,parent){
             let request = await removeWorks(data[i].id);
             if (request){
                 removeWorksOfDisplay(data[i].id,data,parent);
+            }else{
+                alert("Erreur lors de la suppression de la photo");
             }
         });
     }
@@ -62,6 +64,7 @@ function removeWorksOfDisplay(id,data,parent){
     });
     dynamicDisplayGallery(data,document.querySelector(".gallery"));
     galleryDisplayModal(data,parent);
+    alert("Photo supprimée");
 }
 
 function templateFormModal(){
@@ -114,7 +117,7 @@ function templateFormModal(){
     return form;
 }
 templateFormModal();
-export async function formModalDisplay(parent,btnSubmit){
+export async function formModalDisplay(parent){
     parent.innerHTML = "";
     let form = templateFormModal();
 
@@ -123,10 +126,8 @@ export async function formModalDisplay(parent,btnSubmit){
         if (input.files && input.files[0]){
             if (form.labelUploadPhotoCore.classList.contains("void")){
                 form.labelUploadPhotoCore.innerHTML = "";
-                if (form.labelUploadPhotoCore.classList.contains("void")){
-                    form.labelUploadPhotoCore.classList.remove("void");
-                    form.labelUploadPhotoCore.classList.add("preview");
-                }
+                form.labelUploadPhotoCore.classList.remove("void");
+                form.labelUploadPhotoCore.classList.add("preview");
 
                 let img = document.createElement("img");
                 form.labelUploadPhotoCore.appendChild(img);
@@ -176,43 +177,48 @@ export async function submitForm(){
     const categorie = document.querySelector("#categorie");
     const maxSizeFile = 4 * 1024 * 1024; //4mo
 
-    async function checkBeforeSubmit(e){
-        e.preventDefault();
-        let file = input.files[0];
-        if (file){
-            if (file.size > maxSizeFile){
-                alert("Fichier trop volumineux");
-                return;
-            }
-            if(title.value == ""){
-                alert("Titre vide");
-                return;
-            }
-            if(categorie.value == ""){
-                alert("Catégorie vide");
-                return;
-            }
+    return new Promise((resolve) => {
+        async function checkBeforeSubmit(e){
+            e.preventDefault();
+            let file = input.files[0];
+            if (file){
+                if (file.size > maxSizeFile){
+                    alert("Fichier trop volumineux");
+                    return false;
+                }
+                if(title.value == ""){
+                    alert("Titre vide");
+                    return false;
+                }
+                if(categorie.value == ""){
+                    alert("Catégorie vide");
+                    return false;
+                }
 
-            let formData = new FormData();
+                let formData = new FormData();
 
-            formData.append("image", file, file.name);
-            formData.append("title", title.value);
-            formData.append("category", categorie.value);
+                formData.append("image", file, file.name);
+                formData.append("title", title.value);
+                formData.append("category", categorie.value);
 
-            let reponse = await postWorks(formData);
-            if (reponse){
-                alert("Photo ajoutée");
-                labelCoreInput.innerHTML = "";
-                labelCoreInput.classList.remove("preview");
-                labelCoreInput.classList.add("void");
-                form.reset();
+                let reponse = await postWorks(formData);
+                if (reponse){
+                    alert("Photo ajoutée");
+                    labelCoreInput.innerHTML = "";
+                    labelCoreInput.classList.remove("preview");
+                    labelCoreInput.classList.add("void");
+                    formModalDisplay(document.querySelector(".modal-body div"));
+                    form.reset();
+                    
+                    resolve(true);
+                }else{
+                    alert("Erreur lors de l'ajout de la photo");
+                    resolve(false);
+                }
             }
-        
-        }
-    };
-    
-    form.addEventListener("submit", checkBeforeSubmit);
-    
-    let submitEvent = new Event("submit", {cancelable: true});
-    form.dispatchEvent(submitEvent);
+        };
+        form.addEventListener("submit", checkBeforeSubmit);
+        let submitEvent = new Event("submit", {cancelable: true});
+        form.dispatchEvent(submitEvent);
+    });
 }

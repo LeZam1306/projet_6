@@ -1,4 +1,4 @@
-import { createElementClass, galleryDisplayModal, formModalDisplay, submitForm} from "./utils.js";
+import { createElementClass, galleryDisplayModal, formModalDisplay, submitForm, dynamicDisplayGallery} from "./utils.js";
 import { getWorks } from "./api.js";
 
 export async function modal(){
@@ -34,6 +34,7 @@ export async function modal(){
     }
     //"steps" is the variable that is used to know which page of the modal we are on to adapt the display
     let steps = 0;
+    let dataWorks = await getWorks();
     const modal = templateModal();
     document.querySelector("body").appendChild(modal.template);
 
@@ -42,57 +43,57 @@ export async function modal(){
     modalTrigger.forEach(toggle => {
         toggle.addEventListener("click", () =>{
             modal.template.classList.toggle("active");
+            steps = 0;
+            display();
         })
     });
     //page change management
-    modal.btnNext.addEventListener("click", () => {
+    modal.btnNext.addEventListener("click", async () => {
         if(steps == 0){ 
             steps++;
             display();
         }else if(steps == 1){
-            submitForm();
+            modal.btnNext.disabled = true;
+            let reponseOfSubmit = await submitForm();
+            if(reponseOfSubmit){
+                dataWorks = await getWorks(); 
+                dynamicDisplayGallery(dataWorks,document.querySelector(".gallery"));
+            }
+            modal.btnNext.disabled = false;
         }
     });
     modal.btnBack.addEventListener("click", () => {
         steps--;
         display();
     });
-
     //get gallery images only
-    let dataWorks = await getWorks();
+    
     display();
-    function display(){
+    async function display(){
         switch (steps){
             case 0:
-                console.log(steps);
                 modal.btnBack.classList.add("hidden");
-
                 modal.title.innerText = "Galerie Photo";
-
                 modal.btnNext.innerText = "Ajouter une photo";
-                
                 modal.core.classList.value = "";
                 modal.core.classList.add("modal__gallery");
                 modal.body.style.overflow = "scroll";
+                dataWorks = await getWorks();
                 galleryDisplayModal(dataWorks, modal.core);
                 break;
             case 1:
-                console.log(steps);
                 modal.btnBack.classList.remove("hidden");
-                
                 modal.title.innerText = "Ajout photo";
                 modal.btnNext.innerText = "Valider";
                 modal.core.classList.value = "";
                 modal.core.classList.add("modal__add-Gallery");
                 modal.body.style.overflow = "visible";
-                formModalDisplay(modal.core,modal.btnNext);
+                formModalDisplay(modal.core);
                 break;
             default:
-                console.log(steps);
                 steps = 0;
                 display();
                 break;
         }
     }
-
 }
