@@ -1,4 +1,4 @@
-import { removeWorks } from "./api.js";
+import { removeWorks, getCategories, postWorks } from "./api.js";
 //Function for create a template element of the galery
 function createElementGallery(imageSrc,title,id){
     return `
@@ -74,7 +74,8 @@ function templateFormModal(){
         inputTitle: document.createElement("input"),
         labelCategorie: document.createElement("label"),
         categorieCore: document.createElement("div"),
-        selectCategorie: document.createElement("select")
+        selectCategorie: document.createElement("select"),
+        voidOptionSelect: document.createElement("option")
     };
 
     form.form.setAttribute("methode", "POST");
@@ -96,6 +97,8 @@ function templateFormModal(){
     form.labelCategorie.innerText = "Catégorie";
     form.selectCategorie.setAttribute("id", "categorie");
     form.selectCategorie.setAttribute("name", "categorie");
+    form.voidOptionSelect.setAttribute("selected", "");
+    form.voidOptionSelect.setAttribute("disable", "");
     
     form.form.appendChild(form.labelUploadPhoto);
     form.form.appendChild(form.inputFile);
@@ -103,6 +106,7 @@ function templateFormModal(){
     form.form.appendChild(form.inputTitle);
     form.form.appendChild(form.labelCategorie);
     form.form.appendChild(form.categorieCore);
+    form.selectCategorie.appendChild(form.voidOptionSelect);
 
     form.labelUploadPhoto.appendChild(form.labelUploadPhotoCore);
     form.categorieCore.appendChild(form.selectCategorie);
@@ -110,7 +114,7 @@ function templateFormModal(){
     return form;
 }
 templateFormModal();
-export function formModalDisplay(parent){
+export async function formModalDisplay(parent,btnSubmit){
     parent.innerHTML = "";
     let form = templateFormModal();
 
@@ -149,9 +153,66 @@ export function formModalDisplay(parent){
         form.labelUploadPhotoCore.appendChild(btnAddPhoto);
         const infoPhoto = createElementClass("p", ["void__info"]);
         infoPhoto.innerText = "jpg, png : 4mo max";
-        form.labelUploadPhotoCore.appendChild(infoPhoto);
-      
+        form.labelUploadPhotoCore.appendChild(infoPhoto);   
+    }
+
+    const dataCategories = await getCategories();
+    for (let i = 0; i < dataCategories.length; i++){
+        let optionSelect = document.createElement("option");
+        optionSelect.value = dataCategories[i].id;
+        optionSelect.innerText = `${dataCategories[i].name}`;
+
+        form.selectCategorie.appendChild(optionSelect);
     }
 
     parent.appendChild(form.form);
+}
+export async function submitForm(){
+
+    const form = document.querySelector(".add-photo");
+    const input = document.querySelector("#upload");
+    const labelCoreInput = document.querySelector(".upload-photo div");
+    const title = document.querySelector("#title");
+    const categorie = document.querySelector("#categorie");
+    const maxSizeFile = 4 * 1024 * 1024; //4mo
+
+    async function checkBeforeSubmit(e){
+        e.preventDefault();
+        let file = input.files[0];
+        if (file){
+            if (file.size > maxSizeFile){
+                alert("Fichier trop volumineux");
+                return;
+            }
+            if(title.value == ""){
+                alert("Titre vide");
+                return;
+            }
+            if(categorie.value == ""){
+                alert("Catégorie vide");
+                return;
+            }
+
+            let formData = new FormData();
+
+            formData.append("image", file, file.name);
+            formData.append("title", title.value);
+            formData.append("category", categorie.value);
+
+            let reponse = await postWorks(formData);
+            if (reponse){
+                alert("Photo ajoutée");
+                labelCoreInput.innerHTML = "";
+                labelCoreInput.classList.remove("preview");
+                labelCoreInput.classList.add("void");
+                form.reset();
+            }
+        
+        }
+    };
+    
+    form.addEventListener("submit", checkBeforeSubmit);
+    
+    let submitEvent = new Event("submit", {cancelable: true});
+    form.dispatchEvent(submitEvent);
 }

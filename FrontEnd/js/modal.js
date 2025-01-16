@@ -1,11 +1,11 @@
-import { createElementClass, galleryDisplayModal, formModalDisplay} from "./utils.js";
+import { createElementClass, galleryDisplayModal, formModalDisplay, submitForm} from "./utils.js";
 import { getWorks } from "./api.js";
 
 export async function modal(){
     //This function return modal Object
     function templateModal(){
         const modal = {
-            template: createElementClass("div", ["modal", "active"]),
+            template: createElementClass("div", ["modal"]),
             triggerBackground: createElementClass("div", ["background-click", "modal-trigger"]),
             content: createElementClass("div", ["modal-content"]),
             header: createElementClass("div", ["modal-header"]),
@@ -33,7 +33,7 @@ export async function modal(){
         return modal;
     }
     //"steps" is the variable that is used to know which page of the modal we are on to adapt the display
-    let steps = 1;
+    let steps = 0;
     const modal = templateModal();
     document.querySelector("body").appendChild(modal.template);
 
@@ -44,6 +44,19 @@ export async function modal(){
             modal.template.classList.toggle("active");
         })
     });
+    //page change management
+    modal.btnNext.addEventListener("click", () => {
+        if(steps == 0){ 
+            steps++;
+            display();
+        }else if(steps == 1){
+            submitForm();
+        }
+    });
+    modal.btnBack.addEventListener("click", () => {
+        steps--;
+        display();
+    });
 
     //get gallery images only
     let dataWorks = await getWorks();
@@ -51,34 +64,31 @@ export async function modal(){
     function display(){
         switch (steps){
             case 0:
+                console.log(steps);
                 modal.btnBack.classList.add("hidden");
 
                 modal.title.innerText = "Galerie Photo";
 
                 modal.btnNext.innerText = "Ajouter une photo";
-                modal.btnNext.addEventListener("click", () => {
-                    steps++;
-                    display();
-                });
+                
                 modal.core.classList.value = "";
                 modal.core.classList.add("modal__gallery");
                 modal.body.style.overflow = "scroll";
                 galleryDisplayModal(dataWorks, modal.core);
                 break;
             case 1:
+                console.log(steps);
                 modal.btnBack.classList.remove("hidden");
-                modal.btnBack.addEventListener("click", () => {
-                    steps--;
-                    display();
-                });
+                
                 modal.title.innerText = "Ajout photo";
                 modal.btnNext.innerText = "Valider";
                 modal.core.classList.value = "";
                 modal.core.classList.add("modal__add-Gallery");
                 modal.body.style.overflow = "visible";
-                formModalDisplay(modal.core);
+                formModalDisplay(modal.core,modal.btnNext);
                 break;
             default:
+                console.log(steps);
                 steps = 0;
                 display();
                 break;

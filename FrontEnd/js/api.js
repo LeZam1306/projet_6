@@ -67,3 +67,23 @@ export async function removeWorks(id){
         console.log(error.message);
     }
 }
+export async function postWorks(data){
+    try{
+        let token = JSON.parse(window.localStorage.getItem("token"));
+
+        let reponse = await fetch("http://localhost:5678/api/works",{
+            method: "POST",
+            headers: {
+                "accept": "application/json", 
+                "Authorization": `Bearer ${token}`,
+            },
+            body: data
+        });
+        if (reponse.ok){
+            return true;
+        }
+    }
+    catch(error){
+        console.log(error.message);
+    }
+}
